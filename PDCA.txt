@@ -1,0 +1,20 @@
+PDCA of formatBars:
+P:10 min
+D:15 min
+C:在设置对象时层次关系出现了瑕疵，导致输出不符合
+  ，调整花去5分钟
+A:之后在做对象之前先画草图，这样避免结构不清楚
+
+PDCA of loadAllItems,getBar,getSubTotal
+P:10 min
+D:10 min 
+C:顺利完成
+A:
+
+PDCA of getReceipt
+P:20 min
+D:30 min
+C:和之前错误相同，也是在设置对象时出现了层次上的
+  问题，而且在输出格式方面一开始审题不清导致花去
+  很多时间来调整，以上调整共花去10分钟
+A:尽量将需要实现的较复杂的功能或者对象进行可视化
