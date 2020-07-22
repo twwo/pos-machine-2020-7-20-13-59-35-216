@@ -1,6 +1,6 @@
 function printReceipt(barcodes) {
-    let barList = formatBars(barcodes);
-    console.log(getReceipt(barList)); 
+    let productList = formatBarcodes(barcodes);
+    console.log(getReceipt(productList)); 
 //     console.log(`
 // ***<store earning no money>Receipt ***
 // Name: Coca-Cola, Quantity: 5, Unit price: 3 (yuan), Subtotal: 15 (yuan)
@@ -11,69 +11,76 @@ function printReceipt(barcodes) {
 // **********************`)
 }
 
-function getReceipt(barList) {
+function getReceipt(productList) {
     let receipt = 
         "\n***<store earning no money>Receipt ***\n";
-        let total = 0;
-    for (let i = 0; i < barList.length; i++) {
-        const element = barList[i];
-        let subTotal = getSubTotal(element);
-        total += subTotal;
+    for (let i = 0; i < productList.length; i++) {
+        const product = productList[i];
+        let subTotalPrice = getSubTotal(product);
+        product.subTotalPrice = subTotalPrice;
         receipt = receipt +
-            "Name: " + element.bar.name +
-            ", Quantity: " + element.acount +
-            ", Unit price: " + element.bar.price +
-            " (yuan), Subtotal: " + subTotal + " (yuan)\n";
+            "Name: " + product.productItem.name +
+            ", Quantity: " + product.amount +
+            ", Unit price: " + product.productItem.price +
+            " (yuan), Subtotal: " + product.subTotalPrice + " (yuan)\n";
     }
     receipt += "----------------------\n"
+    let total = getTotalPrice(productList);
     receipt = receipt +
         "Total: " + total + " (yuan)\n";
     receipt += "**********************"
     return receipt;
 }
 
-function getSubTotal(element) {
-    let acount = element.acount;
-    let price = element.bar.price;
-    return acount * price;
+function getTotalPrice(productList) {
+    let totalPrice = 0;
+    for (let i = 0; i < productList.length; i++) {
+        const product = productList[i];
+        totalPrice += product.subTotalPrice;
+    }
+    return totalPrice
 }
 
-function formatBars(barcodes) {
-    let allItems = loadAllItems();
-    let barList = new Array();
+function getSubTotal(product) {
+    return product.amount * product.productItem.price;
+}
+
+function formatBarcodes(barcodes) {
+    const allProducts = loadAllProducts();
+    let productList = new Array();
     for (let i = 0; i < barcodes.length; i++) {
-        const element = barcodes[i];
-        let bar = getBar(element, allItems);
-        if(bar != null) {
+        const barcode = barcodes[i];
+        let product = getProduct(barcode, allProducts);
+        if(product != null) {
             let i = 0;
-            for (i = 0; i < barList.length; i++) {
-                const element = barList[i];
-                if(element.bar == bar) {
-                    element.acount++;
+            for (i = 0; i < productList.length; i++) {
+                const item = productList[i];
+                if(item.productItem == product) {
+                    item.amount++;
                     break;
                 }
             }
-            if (i == barList.length) {
-                barList.push(
-                    {bar:bar, acount: 1}
+            if (i == productList.length) {
+                productList.push(
+                    {productItem:product, amount: 1}
                 );
             }
         }
     }
-    return barList;
+    return productList;
 }
 
-function getBar(barcode, allItems) {
-    for (let i = 0; i < allItems.length; i++) {
-        const element = allItems[i];
-        if (barcode == element.barcode) {
-            return element;
+function getProduct(barcode, allProducts) {
+    for (let i = 0; i < allProducts.length; i++) {
+        const product = allProducts[i];
+        if (barcode == product.barcode) {
+            return product;
         }
     }
     return null;
 }
 
-function loadAllItems() {
+function loadAllProducts() {
     return [
         {
            barcode: 'ITEM000000',
